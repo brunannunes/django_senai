@@ -2,18 +2,29 @@
 	<head>
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<meta name="author" content="Thayná Quinteiro">
+		<meta name="author" content="">
 		<link rel="stylesheet" href="login.css">
 		<title>Login</title>
 	</head>
 	<body>
 		<div>
-			<form action="/enviar_login" method="post">
+			<div class="error-message">
+				<!-- Mensagem de erro será inserida aqui -->
+			</div>
+			<h2>Login</h2>
+				{% if messages %}
+					<ul class="mensagem_do_servidor">
+						{% for mensagem in messages %}
+							<li {% if mensagem.tags %} class="alert alert--{{message.tags}}"{% endif %}>{{mensagem}}</li>
+						{% endfor %}
+					</ul>
+				{% endif %}	
+			<form action="{% url 'enviar_login' %}" method="post">{% csrf_token %}
 				<h1>LOGIN</h1>
 				<label for="email">E-mail</label>
-				<input type="text" name="email" placeholder="Informe seu email">
+				<input type="text" id="email" name="email" placeholder="Informe seu email">
 				<label for="password">Senha</label>
-				<input type="password" name="senha" placeholder="Informe sua senha">
+				<input type="password" name="senha" id="senha" placeholder="Informe sua senha">
 				<button id="enviar">Sigin</button>
 			</form>
 
