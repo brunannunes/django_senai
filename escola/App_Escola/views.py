@@ -1,4 +1,4 @@
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect, render, get_object_or_404
 from hashlib import sha256
 from .models import Professor, Turma, Atividade
 from django.db import connection, transaction
@@ -137,28 +137,53 @@ def lista_turma(request, id_professor):
                   {'usuario_logado':usuario_logado, 'turmas_do_professor':turmas_do_professor,
                    'id_logado':id_logado})
     
-# def ver_atividades(request):
-#     id_turma = request.GET('id')
-#     dados_turma = Turma.objects.filter(id=id_turma).values("nome_turma", "id")
-#     turma_logada = dados_turma[0]
-#     turma_logada = turma_logada['nome_turma']
-#     id_turma_logado = dados_turma[0]
-#     id_turma_logado = id_turma_logado['id']
-#     lista_atividade = Atividade.objects.filter(id_turma=id_turma_logado)
-#     return render(request, 'Lista_Atividade',
-#                   {'turma_logada': turma_logada, 'lista_atividade': lista_atividade,
-#                    'id_turma':id_turma})
+def ver_atividades(request,id_turma):
+    print(f'get do id{id_turma}')
+    dados_turma = Turma.objects.filter(id=id_turma).values("nome_turma", "id")
+    print(dados_turma)
+    turma_logada = dados_turma[0]
+    turma_logada = turma_logada['nome_turma']
+    id_turma_logado = dados_turma[0]
+    id_turma_logado = id_turma_logado['id']
+    lista_atividade = Atividade.objects.filter(id_turma=id_turma_logado)
+    return render(request, 'Lista_Atividade.html',
+                  {'turma_logada': turma_logada, 'lista_atividade': lista_atividade,
+                   'id_turma':id_turma})
 
-def ver_atividades(request, id_turma):
-    turmas_do_professor = Turma.objects.filter(id=id_turma)
-    # Aqui você pode fazer o que for necessário com 'turmas_do_professor'
-    return render(request, 'Lista_Atividade.html', {
-        'turmas_do_professor': turmas_do_professor,
-        'id_turma': id_turma,  # Passa o id_turma para o template, se necessário
-    })
-
+def cad_atividade(request, id_turma):
+    turma_logada = Turma.objects.filter(id=id_turma).values("nome_turma", "id")
+    turma_logada = turma_logada[0]
+    turma_logada = turma_logada['nome']
+    return render(request, 'Lista_Atividade.html', {'turma_logada':turma_logada, 'id_logado':turma_logada})
      
+def salvar_atividade(request):
+    if (request.method == 'POST'):
+        atividade_nome = request.POST.get('atividade_nome')
+        id_turma = request.POST.get('id_turma_logado')
+        print("cheguei aqui")
+        turma = Turma.objects.get(id=id_turma)
+        grava_atividade = Atividade(
+            nome_atividade = atividade_nome,
+            id_turma = turma
+        )
+        
+        grava_atividade.save()
+        messages.info(request, 'Atividade' + atividade_nome + 'cadastro da atividade com sucesso')
+        return redirect('ver_atividades/' + id_turma)
 
-
+def valida_excluir(request, id_turma):
+    
+    id_professor = request.GET.get('id_professor')
+    
+    turma = get_object_or_404(Turma, id=id_turma)
+    
+    if Atividade.objects.filter(id_turma=turma.id):
+        messages.info(request, 'Turma' + turma.nome_turma + 'possui atividades cadastradas, não pode excluir')
+        
+        return redirect('lista_turma', id_professor=id_professor)
+    
+    turma.delete()
+    
+    return redirect('lista_turma', id_professor=id_professor)
 
 # Create your views here.
