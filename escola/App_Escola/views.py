@@ -64,6 +64,7 @@ def enviar_login(request):
         senha = request.POST.get('senha')
         senha_criptografada = sha256(senha.encode()).hexdigest()
         dados_professor = Professor.objects.filter(email=email).values("nome", "senha", "id")
+        print(dados_professor)
         print("dados do professor", dados_professor)
         
         if dados_professor:
@@ -136,18 +137,26 @@ def lista_turma(request, id_professor):
                   {'usuario_logado':usuario_logado, 'turmas_do_professor':turmas_do_professor,
                    'id_logado':id_logado})
     
-def ver_atividades(request):
-    id_turma = request.GET('id')
-    id_turma = request.GET('who')
-    dados_turma = Turma.objects.filter(id=id_turma).values("nome_turma", "id")
-    turma_logada = dados_turma[0]
-    turma_logada = turma_logada['nome_turma']
-    id_turma_logado = dados_turma[0]
-    id_turma_logado = id_turma_logado['id']
-    lista_atividade = Atividade.objects.filter(id_turma=id_turma_logado)
-    return render(request, 'Lista_Atividade',
-                  {'turma_logada': turma_logada, 'lista_atividade': lista_atividade,
-                   'id_turma':id_turma})
+# def ver_atividades(request):
+#     id_turma = request.GET('id')
+#     dados_turma = Turma.objects.filter(id=id_turma).values("nome_turma", "id")
+#     turma_logada = dados_turma[0]
+#     turma_logada = turma_logada['nome_turma']
+#     id_turma_logado = dados_turma[0]
+#     id_turma_logado = id_turma_logado['id']
+#     lista_atividade = Atividade.objects.filter(id_turma=id_turma_logado)
+#     return render(request, 'Lista_Atividade',
+#                   {'turma_logada': turma_logada, 'lista_atividade': lista_atividade,
+#                    'id_turma':id_turma})
+
+def ver_atividades(request, id_turma):
+    turmas_do_professor = Turma.objects.filter(id=id_turma)
+    # Aqui você pode fazer o que for necessário com 'turmas_do_professor'
+    return render(request, 'Lista_Atividade.html', {
+        'turmas_do_professor': turmas_do_professor,
+        'id_turma': id_turma,  # Passa o id_turma para o template, se necessário
+    })
+
      
 
 
