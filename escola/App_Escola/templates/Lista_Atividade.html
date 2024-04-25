@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="../static/css/cons_turma_lista.css">
+    <link rel="stylesheet" type="text/css" href="../static/css/Lista_atividade.css">
     <title>Lista de Turmas do professor</title>
 </head>
 <header class="login">
@@ -19,7 +19,7 @@
     <ul>
        <li><a href="/cad_atividade/{{id_turma}}">Cadastrar atividades</a></li>
        <li> | Turma Logada: {{turma_logada}} | </a></li>
-       <li><a href="../accounts/logout">SAIR</a></li>
+       <li><a href="/">SAIR</a></li>
     </ul>
 </nav> 
      
@@ -44,12 +44,14 @@
             <tr>
                 <th>Numero</th>
                 <th>Atividade</th>
+                <th>Arquivo</th>
             </tr>
             
             {% for igs in lista_atividade %}
             <tr>
                 <td style="text-align:center">{{igs.id}} </td>
                 <td>{{igs.nome_atividade}}</td>
+                <td style="text-align:center"><a href="{% url 'ver_atividades' id_turma=igs.id %}"><img src="../static/imagens/icon-arquivo.png" alt=""></a></td>
                
             </tr>
             {% endfor %}
@@ -64,6 +66,7 @@
         <div class="form-content">
             <input type="hidden"  name="id_turma_logado" id="id_turma_logado"  value="{{id_turma}}" />
             <input type="text" id="atividade_nome" name="atividade_nome" value="" placeholder="Digite o nome da turma" />
+            <input type="file" name="arquivo" id="arquivo" value="Caminho do arquivo">
             <a>Nome deve ter no mínimo 3 caracteres</a>
         </div>
         <div class="botoes">

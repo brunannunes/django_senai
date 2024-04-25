@@ -19,11 +19,11 @@
 
         {% if user.is_authenticated %}
         <div class="botao_login">
-            <a href="accounts/logout"><button class="btn btn_login">Logout</button></a>
+            <a href="/"><button class="btn btn_login">Logout</button></a>
         </div>
         {% else %}
         <div class="botao_login">
-            <a href="accounts/login"><button class="btn btn_login">Login</button></a>
+            <a href="/"><button class="btn btn_login">Login</button></a>
         </div>
         {% endif %}
 

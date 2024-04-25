@@ -162,9 +162,11 @@ def salvar_atividade(request):
         id_turma = request.POST.get('id_turma_logado')
         print("cheguei aqui")
         turma = Turma.objects.get(id=id_turma)
+        arquivo = request.FILES.get('arquivo')
         grava_atividade = Atividade(
             nome_atividade = atividade_nome,
-            id_turma = turma
+            id_turma = turma,
+            arquivo = arquivo
         )
         
         grava_atividade.save()

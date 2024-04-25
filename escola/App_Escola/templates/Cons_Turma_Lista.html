@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="../static/css/cons_turma_lista.css">
+    <link rel="stylesheet" type="text/css" href="../static/css/Lista_turma.css">
     <title>Lista de Turmas do professor</title>
 </head>
 <header class="login">
@@ -19,7 +19,7 @@
     <ul>
        <li><a href="/cad_turma/{{id_logado}}">Cadastrar Turmas</a></li>
        <li> | Professor logado: {{usuario_logado}} | </a></li>
-       <li><a href="../accounts/logout">SAIR</a></li>
+       <li><a href="/">SAIR</a></li>
     </ul>
 </nav> 
      
@@ -38,6 +38,7 @@
          {% endif %}
         <input type="hidden"  name="id_logado" id="id_logado"  value="{{id_logado}}" />
         <input type="hidden"  name="nome_logado" id="nome_logado"  value="{{usuario_logado}}" />
+        
         <hr>
 
         <table>
@@ -52,8 +53,8 @@
             <tr>
                 <td style="text-align:center">{{igs.id}} </td>
                 <td>{{igs.nome_turma}}</td>
-                <td style="text-align:center"><a href="/valida_excluir/{{igs.id}}?id_professor={{id_logado}}"><i class="fa-solid fa-trash"></i></a></td>
-                <td style="text-align:center"><a href="{% url 'ver_atividades' id_turma=igs.id %}"><i class="fa-solid fa-eye"></i></a></td>
+                <td style="text-align:center"><a href="/valida_excluir/{{igs.id}}?id_professor={{id_logado}}"><button>Excluir</button></a></td>
+                <td style="text-align:center"><a href="{% url 'ver_atividades' id_turma=igs.id %}"><button>vizualizar</button></a></td>
             </tr>
             {% endfor %}
 
