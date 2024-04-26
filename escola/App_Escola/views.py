@@ -4,6 +4,9 @@ from .models import Professor, Turma, Atividade
 from django.db import connection, transaction
 from django.contrib import messages
 from django.http import HttpResponse
+import os
+import mimetypes
+import Openpyxl
 
 def initial_population():
     print("vou pular")
@@ -162,11 +165,12 @@ def salvar_atividade(request):
         id_turma = request.POST.get('id_turma_logado')
         print("cheguei aqui")
         turma = Turma.objects.get(id=id_turma)
-        arquivo = request.FILES.get('arquivo')
+        arquivo2 = request.FILES.get('arquivo')
+        print(arquivo2)
         grava_atividade = Atividade(
             nome_atividade = atividade_nome,
             id_turma = turma,
-            arquivo = arquivo
+            arquivo = arquivo2
         )
         
         grava_atividade.save()
@@ -188,4 +192,40 @@ def valida_excluir(request, id_turma):
     
     return redirect('lista_turma', id_professor=id_professor)
 
+def exibir_arquivo(request, nome_arquivo):
+    caminho_arquivo = os.path.join('atividade_arquivos/', nome_arquivo)
+    
+    if os.path.exists(caminho_arquivo):
+        with open(caminho_arquivo, 'rb') as arquivo:
+            conteudo = arquivo.read()
+        
+        tipo_mimetype, _ = mimetypes.guess_type(caminho_arquivo)
+        
+        resposta = HttpResponse(conteudo, content_type=tipo_mimetype)
+        
+        resposta['Content-Disposition'] = 'inline; filename="' + nome_arquivo + '"'
+        return resposta
+    else:
+        return HttpResponse('Arquivo não encontrado', status=404)
+
+def exportar_para_excel_turmas(request):
+    dados_turma = Turma.objects.all()
+    
+    workbook = Openpyxl.Workbook()
+    sheet = workbook.active
+    sheet.title = "Turmas"
+    
+    sheet['A1'] = "ID"
+    sheet['B1'] = "Nome da Turma"
+    
+    for index, turma in enumerate(dados_turma, start=2):
+        sheet[f'A{index}'] = turma.id
+        sheet[f'B{index}'] = turma.nome_turma
+    
+    response = HttpResponse(content_type = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response['Content-Disposition'] = 'attachment; filename=turma.xlsx'
+    workbook.save(response)
+    return response
+
+def
 # Create your views here.

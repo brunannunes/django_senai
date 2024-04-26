@@ -51,7 +51,11 @@
             <tr>
                 <td style="text-align:center">{{igs.id}} </td>
                 <td>{{igs.nome_atividade}}</td>
-                <td style="text-align:center"><a href="{% url 'ver_atividades' id_turma=igs.id %}"><img src="../static/imagens/icon-arquivo.png" alt=""></a></td>
+                <td style="text-align:center">
+                    {% if igs.arquivo %}
+                    <a href="../../{{igs.arquivo}}"><img src="../static/imagens/icon-arquivo.png" alt=""></a>
+                    {% endif %}
+                </td>
                
             </tr>
             {% endfor %}
@@ -61,12 +65,12 @@
     </div>    
     </div>
     
-    <form id="form" class="form" method="POST" action="{% url 'salvar_atividade' %}">{% csrf_token %}
+    <form id="form" class="form" method="POST" action="{% url 'salvar_atividade' %}" enctype="multipart/form-data">{% csrf_token %}
 
         <div class="form-content">
             <input type="hidden"  name="id_turma_logado" id="id_turma_logado"  value="{{id_turma}}" />
-            <input type="text" id="atividade_nome" name="atividade_nome" value="" placeholder="Digite o nome da turma" />
-            <input type="file" name="arquivo" id="arquivo" value="Caminho do arquivo">
+            <input type="text" id="atividade_nome" name="atividade_nome"  placeholder="Digite o nome da turma" />
+            <input type="file" id="arquivo" name="arquivo" value=""/>
             <a>Nome deve ter no mínimo 3 caracteres</a>
         </div>
         <div class="botoes">
