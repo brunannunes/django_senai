@@ -39,7 +39,9 @@
         <input type="hidden"  name="id_turma_logado" id="id_turma_logado"  value="{{id_turma_logado}}" />
         <input type="hidden"  name="turma_logada" id="turma_logada"  value="{{turma_logada}}" />
         <hr>
-
+        <a href="{% url 'exportar-excel' %}" download=>
+            <button>Exportar par Excel</button>
+           </a> 
         <table>
             <tr>
                 <th>Numero</th>

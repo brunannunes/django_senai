@@ -6,7 +6,7 @@ from django.contrib import messages
 from django.http import HttpResponse
 import os
 import mimetypes
-import Openpyxl
+import openpyxl
 
 def initial_population():
     print("vou pular")
@@ -211,7 +211,7 @@ def exibir_arquivo(request, nome_arquivo):
 def exportar_para_excel_turmas(request):
     dados_turma = Turma.objects.all()
     
-    workbook = Openpyxl.Workbook()
+    workbook = openpyxl.Workbook()
     sheet = workbook.active
     sheet.title = "Turmas"
     
@@ -227,5 +227,25 @@ def exportar_para_excel_turmas(request):
     workbook.save(response)
     return response
 
-def
+def exportar_para_excel_Atividades(request):
+    # Consulta para obter os dados que dseja exportar
+    dados_atividades = Atividade.objects.all()
+    
+    #criamdo um novo arquivo Excel
+    workbook = openpyxl.Workbook()
+    sheet = workbook.active
+    sheet.title = "Atividades" 
+    
+    #Escrevendo os dados
+    
+    for index, atividade in enumerate(dados_atividades, start=2):
+        sheet[f'A{index}'] = atividade.id 
+        sheet[f'B{index}'] = atividade.nome_atividade
+        sheet[f'C{index}'] = atividade.id_turma.nome_turma
+    
+    #salvando no Excel
+    response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response['Content-Disposition'] = 'attachment; filename=atividades.xlsx'
+    workbook.save(response)
+    return response
 # Create your views here.
